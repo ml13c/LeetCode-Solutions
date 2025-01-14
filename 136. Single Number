@@ -1,0 +1,39 @@
+*/
+Description:
+Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
+
+You must implement a solution with a linear runtime complexity and use only constant extra space.
+
+Example 1:
+
+Input: nums = [2,2,1]
+
+Output: 1
+Each element in the array appears twice except for one element which appears only once.
+SOLUTION:
+*/
+class Solution {
+    public int singleNumber(int[] nums) {
+        int ans = 0; 
+        for (int x : nums) {
+            ans ^= x; //Using the '^' acts as the xor operator.
+        }
+        return ans;
+    }
+}
+/*
+EXPLANATION:
+The xor operator (^) is used to compare elements in the array with the variable 0 in binary. After it is initialy 'xor'd with 0
+each elemement is 'xor'd with the result. This cancels out each previous duplicate number and what is left is the unique element.
+Ex:
+Array = [1,2,3,1,2]
+
+1 xor 0 = 0001---->now this gets set as ans
+2 xor 1 = 0011----> (3 is result in binary) gets set as ans
+3 xor 3 = 0000----> set to 0 b/c of xor properties
+1 xor 0 = 0001 ----> set as ans
+2 xor 1 = 0011 ----> reached end and everything else ended up canceling so ans in binary is 0011 converted to dec is 3
+return ans(returns 3 or unique int element)
+
+Also possible doing hashmap
+*/
