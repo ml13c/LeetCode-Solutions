@@ -1,0 +1,22 @@
+class Solution {
+    public int[] findThePrefixCommonArray(int[] A, int[] B) {
+        //at i return the amount of times that a number is present in both A and B
+        //needs to check only numbers or at i of one array
+        //and compare with every number of the other array at or before i
+
+        int[] countarr = new int[A.length];
+        int n = A.length;
+        int[] freq = new int[n + 1]; //use this array of size n length
+        int[] ans = new int[n]; // this array stores the answer at index i for the amount of times an
+        // element was counted
+        int common = 0;// this is just a counter so as default there is no element at i=0
+
+        for (int i = 0; i < n; i++) {
+            if (++freq[A[i]] == 2) common++;
+            if (++freq[B[i]] == 2) common++;
+            ans[i] = common; //adds the counted times/frequency a number was present in a and b
+        }
+        return ans;
+    }
+    
+}
