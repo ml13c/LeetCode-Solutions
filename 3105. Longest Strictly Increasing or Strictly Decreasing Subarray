@@ -1,0 +1,27 @@
+class Solution:
+    def longestMonotonicSubarray(self, nums: List[int]) -> int:
+        inc_len = 1
+        dec_len = 1
+        max_len = 1
+        for i in range(1, len(nums)):
+            if nums[i] > nums[i-1]: 
+                inc_len += 1
+                dec_len = 1
+            elif nums[i] < nums[i-1]:
+                dec_len += 1
+                inc_len = 1
+            else:
+                inc_len = 1
+                dec_len = 1
+
+            max_len = max(max_len, inc_len, dec_len)
+
+        return max_len
+/*  DESCRIPTION
+Counters are set to one in the beginning (inc_len and dec_len) will be used to figure out how many elements the subarray has
+*the base case is 1 due to the constraints given where nums is > 1 so the max len is 1 by default*
+the if statements compare each element in descending or ascending subarray.
+Once it reaches the end the max_len variable is set to the largest value using max and putting in our 3 counters to see which is the bigger number (1, increasing array, descending array)
+If at any point the streak is broken or the current element breaks the ascending/descending pattern the counters are set back to 1. REMEMBER the max_len is still in the for loop and is checked through each for loop iteration 
+so it keeps track of the largest subarray so far.
+*/
