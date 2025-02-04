@@ -20,5 +20,21 @@ class Solution:
         #                   /  \
         #                  L    R
         return left_side + [root.val] + right_side
+    # This version visits each node once which is fine so it should lead to time complexity of O(N). However, python 
+    # does list concatenation so it actually creates new lists at each step leading to O(N^2) for linked list trees
     # Version 2
-    #This version ha
+    #This version keeps the space equal to the height of the tree and avoids new lists at each step making it better
+    # for handling larger trees.
+    result, stack = [], []
+    current = root
+
+    while current or stack:
+        stack.append(current) #add current node/parent
+        current = current.left # move to next node/child
+
+        current = stack.pop()
+        result.append(current.val)
+
+        current = current.right #move to next node/child on right side
+
+    return result
