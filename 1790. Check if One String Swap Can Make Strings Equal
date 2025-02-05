@@ -1,0 +1,28 @@
+class Solution:
+    def areAlmostEqual(self, s1: str, s2: str) -> bool:
+        if s1 == s2:
+            return True
+
+        diff =[]
+        for i in  range(len(s1)):
+            if s1[i] != s2[i]:
+                diff.append((s1[i], s2[i]))
+
+        if len(diff) != 2:
+            return False
+        
+        return diff[0] == diff[1][::-1]
+/*
+First off we have to understand the question. Its asking that if the strings are already equal then
+we just set it as true since it is asking if we need to make  less than or equal to one switch for each 
+character in the array. Then if we have to make a switch more than once we return false.
+So first we check if they are equal
+Then we make an array to store the characters of the string. 
+We store them in the array if the current index of the character in the string are not equal to each other
+Note that when storing them in the array we store them from each array since we would have to swap 2
+characters thus making the length of the array 2
+if it does not any point then that means more than one index of the strings do not share the same character
+so it would  take more than one swap thus it is false.
+in the last return we check if the swap would even make the strings equal so we check if the
+reversed pair of characters is equal to the first strings characters.
+*/
