@@ -1,0 +1,29 @@
+class Solution:
+    def tupleSameProduct(self, nums: List[int]) -> int:
+        ans = 0
+        count = collections.Counter()
+
+        for i in range(len(nums)):
+            for j in range(i):
+                prod = nums[i] * nums[j]
+                ans += count[prod] * 8
+                count [prod] += 1
+        return ans
+
+/* DESCRIPTION
+What is a tuple?
+its basically like a list but the contents cannot be changed once it is created 
+Problem:
+each element has to be distinct so no dupes in the tuple
+Given an array we want to find how many tuples satify the equation such that a*b=c*d
+Answer:
+First we want to set the loop equal to the length of the array and loop through each element in the nums array .
+Then we want to loop through all the previous elements up until the i element to get each pair.Each pair we calculate the product of the two numbers and store it in prod
+count[prod] is used as the counter for how many have the same product as it. 
+Note that when one is found it can be setup in 8 different ways so count is not the direct answer since we can arrange it in 8 different ways and so we multiply count by 8
+to give us the answer.
+This is kind of a brute force approach tho
+*/
+
+Desscription for other method
+not found
