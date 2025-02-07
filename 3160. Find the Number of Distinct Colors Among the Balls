@@ -1,0 +1,16 @@
+class Solution:
+    def queryResults(self, limit: int, queries: List[List[int]]) -> List[int]:
+        result = []
+        hash = {}
+        hash_count = Counter()
+        #for query in queries
+        for x,y in queries:
+            hash_count[y] += 1
+            if x in hash:
+                hash_count[hash[x]] -= 1
+                if hash_count[hash[x]] == 0:
+                    hash_count.pop(hash[x])
+            hash[x] = y
+            result.append(len(hash_count))
+
+        return result
