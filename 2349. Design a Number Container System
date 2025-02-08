@@ -1,0 +1,60 @@
+class NumberContainers:
+
+    def __init__(self):
+
+        # Dictionary to hold the current number at each index
+
+        self.index_to_number = {}
+
+        # Defaultdict to hold SortedSets which will contain indices for each number
+
+        # SortedSets are used for maintaining the indices in sorted order
+
+        self.number_to_indices = defaultdict(SortedSet)
+
+
+    def change(self, index: int, number: int) -> None:
+
+        """Update the number at the given index and maintain the indices sorted."""
+
+        # If the index is already in our mapping, remove it from the current number's SortedSet
+
+        if index in self.index_to_number:
+
+            current_number = self.index_to_number[index]
+
+            self.number_to_indices[current_number].remove(index)
+
+      
+
+        # Update the number at the index in our index_to_number mapping
+
+        self.index_to_number[index] = number
+
+        # Add the index to the new number's SortedSet
+
+        self.number_to_indices[number].add(index)
+
+
+    def find(self, number: int) -> int:
+
+        """Returns the smallest index for the given number; if not found, returns -1."""
+
+        # Get the SortedSet of indices for the given number
+
+        indices = self.number_to_indices[number]
+
+        # If there are any indices, return the smallest one (first element)
+
+        # If not, return -1 indicating the number is not assigned to any index
+
+        return indices[0] if indices else -1
+
+
+# The NumberContainers class can now be instantiated and methods called as described.
+
+# obj = NumberContainers()
+
+# obj.change(index, number)
+
+# param_2 = obj.find(number)
