@@ -1,0 +1,33 @@
+class Solution:
+    def clearDigits(self, s: str) -> str:
+        result = []  # Use a list as a stack
+        for char in s:
+            if char.isdigit():
+                if result:  # Check if stack is not empty before popping
+                    result.pop()
+            else:
+                result.append(char)  # Add non-digit characters to the stack
+        return "".join(result)  # Convert list to string efficiently
+        # result = []  # Use a list to store characters
+        # i = 0
+        # while i < len(s):
+        #     if s[i].isdigit():
+        #         i += 1
+        #         if i > 0:
+        #             if result:  # Check if result is not empty before poping
+        #                 result.pop()  # Remove the last element (char to the left)
+        #     else:
+        #         result.append(s[i])  # Add the character to the list
+        #         i += 1
+        # return "".join(result)  # Join the list elements into a string
+        # result = ""
+        # i = 0
+        # while i < len(s):
+        #     if s[i].isdigit():
+        #         i += 1  # Skip the digit
+        #         if i > 0: # Check if there is a char to the left
+        #             result = result[:-1] # Remove the char to the left
+        #     else:
+        #         result += s[i]  # Add the character to the result
+        #         i += 1
+        # return result
