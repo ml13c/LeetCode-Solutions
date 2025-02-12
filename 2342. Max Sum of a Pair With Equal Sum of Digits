@@ -1,0 +1,43 @@
+    # first we need to make sure that i and j do not equal each other when comparing indices
+    # then the digits of the index for i and j have to equal each other.
+    # we can do this using this example
+    # number being the i or jth index
+    # number = 9876543210
+    # digit_index = 3- this changes for how big the number is since it is from 1-10^9
+    # this finds the digit for that index
+    # digit = (number % 10 ** digit_index) // 10 ** (digit_index — 1)
+    # we need to do this for each pair of i and j and 
+    # print the maximum value of the sum fornums[i+j]
+
+class Solution:
+    def maximumSum(self, nums: List[int]) -> int:
+        # helper function to calc(short for calculate) sum of digits
+        def digit_sum(n: int) -> int:
+            total = 0
+            while n > 0:
+                total += n % 10
+                n //= 10 
+            return total
+
+        # create dictionary to store numbers grouped by their digits sum
+        digit_sums = defaultdict(list)
+        for num in nums:
+            d_sum = digit_sum(num)
+            digit_sums[d_sum].append(num)
+
+        max_sum = -1  # return if theres no pair
+
+        # find the biggest sum after all other conditions
+        for group in digit_sums.values():
+            if len(group) > 1:
+                #keep track of largest two numbers
+                first_max = second_max = 0
+                for num in group:
+                    if num > first_max:
+                        second_max = first_max
+                        first_max = num
+                    elif num > second_max:
+                        second_max = num
+                max_sum = max(max_sum, first_max + second_max)
+
+        return max_sum
