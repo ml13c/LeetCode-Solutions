@@ -1,0 +1,30 @@
+class Solution {
+public:
+    string smallestNumber(string pattern) {
+        stack<int> s;
+        string num = "";
+        /*
+        we need to return a number such that it is the smallest number possible yet still follows the rule
+            1. if pattern[i]is I then the digit 
+            output must follow num[i]<num[i]+1
+            2. if D,  num[i] > num[i+1]
+        this can be implemented easily but in order to find the smallest we want num[0+1] to be the smallest digit possible
+        */
+        for(int i = 0; i <= pattern.size(); ++i){
+            s.push(i+1);//push 1 since its smallest and !=0 in 1-9
+            //d= decreasing order(remember a stack is first in last out)
+            if(i == pattern.size() || pattern[i] == 'I'){//now ascending
+                while(!s.empty()){
+                    num += to_string(s.top());
+                    s.pop();
+                }
+            }
+/*if DDD is would go in as 1,2,3 to the stack and output as 3,2,1 when popped
+it is popped when switched to i 
+when i is detected the bottom number of the stack must be the greatest so although it is ascending in the string, it must be descending order in which
+numbers are added to stack
+*/
+        }
+        return num;
+    }
+};
