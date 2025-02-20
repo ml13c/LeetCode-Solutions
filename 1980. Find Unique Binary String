@@ -1,0 +1,34 @@
+'''
+We can think of each index of our string array as a row in a matrix. Each row represent ones of the string in nums. The column index is shows the specific bit in a string. This is represent as ixj i being rows(horizontal) and j being columns(vertical) also as nums[i][j]
+shown below.
+1 2 3
+4 5 6
+7 8 9
+If we extract the diagnal elements(like wininng diagnolly in tictactoe) we get the 
+diagnal elements or nums[i][i]. This gets us 1, 5, 9.
+1 - -
+- 5 -
+- - 9
+then based on the bit on that position nums[i][i], (1,5,9), we flip the value.
+This works because no matter what size n the binary value is we change it at every row thus as every string in the nums string array.
+'''
+class Solution {
+public:
+    string findDifferentBinaryString(vector<string>& nums) {
+        string ans = "";
+        //create a binary string that does not appear in nums
+        //use bit manipulation
+        for(int i = 0; i < nums.size(); i++){
+            char cBit = nums [i][i];
+            char fBit;
+            if(cBit =='0'){
+                fBit = '1';
+            }
+            else{
+                fBit = '0';
+            }
+            ans += fBit;
+        }
+        return ans;
+    }
+};
