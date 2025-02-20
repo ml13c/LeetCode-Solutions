@@ -1,0 +1,35 @@
+/*
+a happy string contains a,b, or c
+it is considered happy if it only contains those characters and they cant 
+be consecutive such that s[i] = s[i+1]
+We are asked to return the kth string of a list
+*/
+class Solution {
+public:
+
+    void backtrack(int n, int &k, string s, string &result, const vector<char> &chars) {
+    if (s.length() == n) {
+        k--;
+        if (k == 0) {
+            result = s;
+            return;
+        }
+        return;
+    }
+    
+    for (char c : chars) {
+        if (s.empty() || s.back() != c) {  // no s[i] = s[i+1]
+            backtrack(n, k, s + c, result, chars);
+            if (k == 0) return;  // if kth happy string is found stop
+        }
+    }
+}
+    string getHappyString(int n, int k) {
+        string result;
+        vector<char> chars = {'a', 'b', 'c'};  // character set
+
+        backtrack(n, k, "", result, chars);
+
+        return result.empty() ? "" : result;  // empty string if k is out of range(constraints)
+    }
+};
