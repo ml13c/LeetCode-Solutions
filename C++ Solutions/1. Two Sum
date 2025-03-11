@@ -1,0 +1,45 @@
+// Solution 1: this one is brute force on^2. for EVERY element in the array you subract it from the target. The reaminder is then used for every other element in the array and
+// we check if the element of that index is the remainder. To achieve this we use a vector array adding and popping indexes as we go. 
+class Solution {
+public:
+    std::vector<int> twoSum(std::vector<int>& nums, int target) {
+        /*
+        target - index = remainder
+        if remainder in array
+        return array index of original and remainer index
+        */
+        std::vector<int> ans;
+        int remainder;
+        int length = nums.size();
+        for (int i = 0; i < length; i++) {
+            remainder = target - nums[i];
+            ans.push_back(i); 
+            for (int k = 0; k < length; k++) {
+                if (remainder == nums[k] && i != k) { 
+                    ans.push_back(k);
+                    return ans;
+                }
+            }
+            ans.pop_back(); 
+        }
+        return {};
+    }
+};
+// Solution 2 follows a similar approach but here instead of usiing a vector array we use a map. This works in the same way of looking for our remainder but since 
+// we use a map which has the hashfunction we can lookup the indeces as key values. Ultimately we find our solution not through popping and apending values as we go but
+// through a "smart search". This gives us our solution in O(n) time.
+class Solution {
+public:
+    std::vector<int> twoSum(std::vector<int>& nums, int target) {
+        std::unordered_map<int, int> numMap; // Store numbers and their indices
+
+        for (int i = 0; i < nums.size(); ++i) {
+            int remainder = target - nums[i];
+            if (numMap.find(remainder) != numMap.end()) {
+                return {numMap[remainder], i};
+            }
+            numMap[nums[i]] = i;
+        }
+        return {};
+    }
+};
