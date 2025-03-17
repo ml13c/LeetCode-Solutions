@@ -1,0 +1,23 @@
+/* Constraints
+
+    nums.length == 2 * n
+    1 <= n <= 500
+    1 <= nums[i] <= 500
+
+*/
+class Solution {
+public:
+    bool divideArray(vector<int>& nums) {
+        vector<int> frequency(501, 0);// the constraint says b/w 1-500 so we create an array of this size to count the frequency of possible numbers
+        for (int num : nums) {
+            frequency[num]++;
+        }
+        for (int freq : frequency) {//if the frequency of an element is not an even count then it is not possible
+            if (freq % 2 != 0) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+};
