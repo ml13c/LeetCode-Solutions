@@ -1,0 +1,63 @@
+/*
+EXPLANATION: We want to do this:
+You are given an integer array digits, where each element is a digit. The array may contain duplicates.
+
+You need to find all the unique integers that follow the given requirements:
+
+    The integer consists of the concatenation of three elements from digits in any arbitrary order.
+    The integer does not have leading zeros.
+    The integer is even.
+
+For example, if the given digits were [1, 2, 3], integers 132 and 312 follow the requirements.
+
+Return a sorted array of the unique integers.
+
+To do this:
+a number can ONLY be even if the last digit is even
+cant have 0 upfront
+sorted
+3 digit number and it has to be a unique combination
+How to do this:
+To do this you need to first approach how you are going to build a 3 digit number. Here we just go through 3 for loops in order to find our digits.
+To keep track we just use a boolean and check wether or not we have seen that number yet
+FOR LOOP 1:
+this loop just checks that the first digit (hundreds) is not 0
+FOR LOOP 2:
+this loop makes sure that j is not the same as i (we will use this to avoid non posisble numbers)
+FOR LOOP 3:
+same as loop 2 but here we check if the number is even. If it is even then it meets all criteria to become a number to check. Now once we check it we want to see if it is seen and add it.
+Once everything is appended we just sort it. Not the best solution but the most logical for me. I will upload the most optimal c++ one later and explain it tomorrow or after work (5/12).
+
+/*
+class Solution {
+public:
+    vector<int> findEvenNumbers(vector<int>& digits) {
+        /*
+        find all unique integers that follow the given requirements
+        -no leading 0
+        -even (% 2  = 0)
+        - 
+        */
+        //biggest number possible is digit(max) + 99 < 1000
+        vector<int> ans;
+        int n = digits.size();
+        bool seen[1000] = {false};
+        for(int i = 0; i < n; i++){
+            if (digits[i] == 0) continue;
+            for (int j = 0; j < n; j++){
+                if (j == i) continue;
+                for(int k = 0; k < n; k++){
+                    if(k == i || k == j) continue;
+                    if (digits[k] % 2 != 0) continue;
+                    int num = digits[i]*100 + digits[j]*10+digits[k];
+                    if(!seen[num]) {
+                        seen[num] = true;
+                        ans.push_back(num);
+                    }
+                }
+            }
+        }
+        sort(ans.begin(), ans.end());
+        return ans;
+    }
+};
