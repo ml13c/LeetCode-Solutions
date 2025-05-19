@@ -1,0 +1,26 @@
+Description:
+equilateral: if all sides are equal
+isosceles: if just 2 sides are equal
+scalene: if all sides are different
+triangle: if any 2 sides sumed up are greater than 1 side(for all sides this must be true)
+Solution: So first you need to check if the given nums can even form a triangle. To do this you first setup the triangle type as none by default and check if the sides add up
+to greater than the other side for all sides. If not then its not a triangle. Once this is checked you can compare the sides if they are equilateral or if they are all different.
+The isosceles triangle can only be true for just two sides.
+class Solution {
+public:
+    string triangleType(vector<int>& nums) {
+        string type = "none";
+        if(nums[0]+nums[1] > nums[2] && nums[0]+nums[2] > nums[1] && nums[2]+nums[1] > nums[0]){
+            if(nums[0]==nums[1] && nums[0]==nums[2]){
+                type = "equilateral";
+            }
+            else if(nums[1] == nums[2] || nums[0] == nums[2] || nums[1] == nums[0]){
+                type = "isosceles";
+            }
+            else if(nums[0] != nums[1] && nums[0] != nums[2] && nums[2] != nums[1]){
+                type = "scalene";
+            }
+        }
+        return type;
+    }
+};
