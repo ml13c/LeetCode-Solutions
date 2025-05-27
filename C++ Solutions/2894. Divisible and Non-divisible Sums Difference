@@ -1,0 +1,32 @@
+Problem:
+You are given positive integers n and m.
+
+Define two integers as follows:
+
+    num1: The sum of all integers in the range [1, n] (both inclusive) that are not divisible by m.
+    num2: The sum of all integers in the range [1, n] (both inclusive) that are divisible by m.
+
+Return the integer num1 - num2.
+Approach:
+we need to get the difference of the sum of the two arrays num1 and num2. Create those arrays that fit the criteria and use a for loop to count the sum into var num1 and num2
+then get the difference of those two.
+Solution:
+class Solution {
+public:
+    int differenceOfSums(int n, int m) {
+        int num1 = 0;
+        int num2 = 0;
+        for(int i = 1; i <= n; i++ )
+        if(i % m == 0){
+            num2 += i;
+        }
+        else{
+            num1 += i;
+        }
+    return num1-num2;
+    }
+    
+};
+Encountered Issues/Explanation:
+none ; Need to get the sum from 1-n inclusive so use a for loop for that. Then to check if something is divisible take mod of m and check if it is equal to 0.
+Then just use two variables as counters and get the difference of those two.
