@@ -1,0 +1,118 @@
+class Solution {
+
+public:
+
+    // Method to compute the maximum number of target nodes for two graphs with defined edges
+
+    std::vector<int> maxTargetNodes(std::vector<std::vector<int>>& edges1, std::vector<std::vector<int>>& edges2, int k) {
+
+        // Build the graph for edges2
+
+        auto graph2 = build(edges2);
+
+        int size2 = edges2.size() + 1; // Number of nodes in the second graph
+
+        int maxTargets = 0;
+
+
+        // Find the maximum targets reachable within k-1 steps in edges2
+
+        for (int node = 0; node < size2; ++node) {
+
+            maxTargets = std::max(maxTargets, dfs(graph2, node, -1, k - 1));
+
+        }
+
+
+        // Build the graph for edges1
+
+        auto graph1 = build(edges1);
+
+        int size1 = edges1.size() + 1; // Number of nodes in the first graph
+
+
+        std::vector<int> result(size1, maxTargets);
+
+
+        // Calculate maximum targets reachable with k steps starting from any node in edges1
+
+        for (int node = 0; node < size1; ++node) {
+
+            result[node] += dfs(graph1, node, -1, k);
+
+        }
+
+
+        return result; // Return the result vector containing the max target nodes for each node in graph1
+
+    }
+
+
+private:
+
+    // Method to build the adjacency list representation of a graph from edge list
+
+    std::vector<std::vector<int>> build(const std::vector<std::vector<int>>& edges) {
+
+        int numNodes = edges.size() + 1; // Number of nodes in the graph
+
+        std::vector<std::vector<int>> graph(numNodes);
+
+      
+
+        // Add edges to the graph
+
+        for (const auto& edge : edges) {
+
+            int nodeA = edge[0], nodeB = edge[1];
+
+            graph[nodeA].push_back(nodeB);
+
+            graph[nodeB].push_back(nodeA);
+
+        }
+
+      
+
+        return graph;
+
+    }
+
+
+    // Depth First Search (DFS) method to count nodes reachable within d steps from a given node
+
+    int dfs(const std::vector<std::vector<int>>& graph, int currentNode, int parentNode, int stepsRemaining) {
+
+        // Base condition: No more steps left to take
+
+        if (stepsRemaining < 0) {
+
+            return 0;
+
+        }
+
+      
+
+        int count = 1; // Count the current node
+
+      
+
+        // Recursively visit all connected nodes (neighbors)
+
+        for (int neighbor : graph[currentNode]) {
+
+            if (neighbor != parentNode) {
+
+                count += dfs(graph, neighbor, currentNode, stepsRemaining - 1);
+
+            }
+
+        }
+
+      
+
+        return count; // Return the total count of reachable nodes
+
+    }
+
+};
