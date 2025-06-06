@@ -1,0 +1,38 @@
+class Solution {
+
+public:
+
+    // method that takes a string s and returns a string based on certain logic
+    string robotWithString(string s) {
+
+        int charCount[26] = {0}; // array to count how many times each character appears
+
+        // count the number of each character in the input string
+        for (char ch : s) {
+            ++charCount[ch - 'a'];
+        }
+
+        char minChar = 'a'; // smallest character that still has remaining occurrences
+        string stack;       // use a string as a stack to hold characters temporarily
+        string answer;      // the final result string we will build
+
+        // go through each character in the input string
+        for (char ch : s) {
+
+            // we are using this character, so decrease its count
+            --charCount[ch - 'a'];
+
+            // update minChar to skip characters that are fully used up
+            while (minChar < 'z' && charCount[minChar - 'a'] == 0) {
+                ++minChar;
+            }
+stack.push_back(ch);
+
+            while (!stack.empty() && stack.back() <= minChar) {
+                answer.push_back(stack.back());
+                stack.pop_back();
+            }
+        }
+        return answer;
+    }
+};
