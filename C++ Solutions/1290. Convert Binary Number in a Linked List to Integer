@@ -1,0 +1,22 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ gather value (1 or 0) into and get ready to perform val(x) * 2^x, where x is the index of the value for the given head.
+ */
+class Solution {
+public:
+    int getDecimalValue(ListNode* head) {
+        int result = 0;//stores result
+        while(head != nullptr){//cycles through linked list
+            result = (result << 1) | head-> val;//bit operation that left shifts current val then OR with next val.(math works out to give correct ans)
+            head = head->next;//cycles through linked list
+        }
+        return result;
+    }
+};
