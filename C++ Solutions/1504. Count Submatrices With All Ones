@@ -1,18 +1,27 @@
 class Solution {
 public:
     int numSubmat(vector<vector<int>>& mat) {
-        int counter1 = 0;
-        int count2 = 0;
-        for(int i = 0;i<m;i++){
-            for(int j = 0;j<n;j++){
-                    if(mat[i][j]==0){
-                        nums[j]=0;
-                    }
-                    else{
-                        nums[j] = nums[j-1]+1;
-                    }
+        int rows = mat.size(), cols = mat[0].size();
+        vector<vector<int>> width(rows, vector<int>(cols, 0));
+
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (mat[r][c] == 1) {
+                    width[r][c] = (c == 0 ? 1 : width[r][c - 1] + 1);
+                }
             }
         }
-        return (counter1 + count2);
+
+        int total = 0;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                int minWidth = INT_MAX;
+                for (int k = r; k >= 0 && minWidth > 0; k--) {
+                    minWidth = min(minWidth, width[k][c]);
+                    total += minWidth;
+                }
+            }
+        }
+        return total;
     }
 };
