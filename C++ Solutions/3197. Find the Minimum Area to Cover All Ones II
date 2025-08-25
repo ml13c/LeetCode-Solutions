@@ -1,0 +1,145 @@
+PROBLEM:
+hard
+You are given a 2D binary array grid. You need to find 3 non-overlapping rectangles having non-zero areas with horizontal and vertical sides such that all the 1's in grid lie inside these rectangles.
+
+Return the minimum possible sum of the area of these rectangles.
+
+Note that the rectangles are allowed to touch.
+SOLUTION code:
+class Solution {
+    vector<vector<int>> prefix;
+
+    // build 2d prefix sum for fast submatrix queries
+    void buildPrefix(const vector<vector<int>>& grid) {
+        int m = grid.size(), n = grid[0].size();
+        prefix.assign(m + 1, vector<int>(n + 1, 0));
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                prefix[i+1][j+1] = grid[i][j]
+                                 + prefix[i+1][j]
+                                 + prefix[i][j+1]
+                                 - prefix[i][j];
+            }
+        }
+    }
+
+    // return number of ones inside submatrix [(x1,y1) .. (x2,y2)]
+    int sumBox(int x1, int x2, int y1, int y2) {
+        if (x1 > x2 || y1 > y2) return 0;
+        return prefix[x2+1][y2+1]
+             - prefix[x1][y2+1]
+             - prefix[x2+1][y1]
+             + prefix[x1][y1];
+    }
+
+    // find bounding box of all ones
+    void getBounds(const vector<vector<int>>& grid,
+                   int& minX, int& maxX, int& minY, int& maxY) {
+        int m = grid.size(), n = grid[0].size();
+        minX = INT_MAX; maxX = -1;
+        minY = INT_MAX; maxY = -1;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] == 1) {
+                    minX = min(minX, i);
+                    maxX = max(maxX, i);
+                    minY = min(minY, j);
+                    maxY = max(maxY, j);
+                }
+            }
+        }
+    }
+
+    // shrink bounding box [x1..x2][y1..y2] to just cover all ones
+    int minArea(int x1, int x2, int y1, int y2) {
+        if (x1 > x2 || y1 > y2) return 0;
+        if (sumBox(x1, x2, y1, y2) == 0) return 0;
+
+        auto shrink = [&](int lo, int hi, auto check) {
+            int res = hi;
+            while (lo <= hi) {
+                int mid = lo + (hi - lo) / 2;
+                if (check(mid)) { res = mid; hi = mid - 1; }
+                else lo = mid + 1;
+            }
+            return res;
+        };
+        auto shrinkMax = [&](int lo, int hi, auto check) {
+            int res = lo;
+            while (lo <= hi) {
+                int mid = lo + (hi - lo) / 2;
+                if (check(mid)) { res = mid; lo = mid + 1; }
+                else hi = mid - 1;
+            }
+            return res;
+        };
+
+        int minX = shrink(x1, x2, [&](int mid){ return sumBox(x1, mid, y1, y2) > 0; });
+        int maxX = shrinkMax(x1, x2, [&](int mid){ return sumBox(mid, x2, y1, y2) > 0; });
+        int minY = shrink(y1, y2, [&](int mid){ return sumBox(x1, x2, y1, mid) > 0; });
+        int maxY = shrinkMax(y1, y2, [&](int mid){ return sumBox(x1, x2, mid, y2) > 0; });
+
+        return (maxX - minX + 1) * (maxY - minY + 1);
+    }
+
+public:
+    int minimumSum(vector<vector<int>>& grid) {
+        int m = grid.size(), n = grid[0].size();
+        buildPrefix(grid);
+
+        int minX, maxX, minY, maxY;
+        getBounds(grid, minX, maxX, minY, maxY);
+        if (maxX == -1) return 0; // no ones present
+
+        int best = INT_MAX;
+
+        // case 1–4: l-shaped partitions
+        for (int i = minX; i < maxX; ++i) {
+            for (int j = minY; j < maxY; ++j) {
+                best = min({best,
+                    // up
+                    minArea(minX, i, minY, j) +
+                    minArea(minX, i, j+1, maxY) +
+                    minArea(i+1, maxX, minY, maxY),
+                    // right
+                    minArea(minX, maxX, minY, j) +
+                    minArea(minX, i, j+1, maxY) +
+                    minArea(i+1, maxX, j+1, maxY),
+                    // down
+                    minArea(minX, i, minY, maxY) +
+                    minArea(i+1, maxX, minY, j) +
+                    minArea(i+1, maxX, j+1, maxY),
+                    // left
+                    minArea(minX, i, minY, j) +
+                    minArea(i+1, maxX, minY, j) +
+                    minArea(minX, maxX, j+1, maxY)
+                });
+            }
+        }
+
+        // case 5: horizontal 3-way split
+        for (int i = minX; i < maxX - 1; ++i) {
+            for (int j = i + 1; j < maxX; ++j) {
+                int area = minArea(minX, i, minY, maxY) +
+                           minArea(i+1, j, minY, maxY) +
+                           minArea(j+1, maxX, minY, maxY);
+                best = min(best, area);
+            }
+        }
+
+        // case 6: vertical 3-way split
+        for (int i = minY; i < maxY - 1; ++i) {
+            for (int j = i + 1; j < maxY; ++j) {
+                int area = minArea(minX, maxX, minY, i) +
+                           minArea(minX, maxX, i+1, j) +
+                           minArea(minX, maxX, j+1, maxY);
+                best = min(best, area);
+            }
+        }
+
+        return best;
+    }
+};
+
+SOLUTION:
+i have no idea honestly ill study it and describe the possible thought process to this solution later (8/25/25 3:30pm)
