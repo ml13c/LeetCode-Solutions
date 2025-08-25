@@ -1,0 +1,47 @@
+DESCRIPTION:
+Given an m x n matrix mat, return an array of all the elements of the array in a diagonal order.
+Input: mat = [[1,2,3],[4,5,6],[7,8,9]]
+Output: [1,2,4,7,5,3,6,8,9]
+SOLUTION:
+class Solution {
+public:
+    std::vector<int> findDiagonalOrder(std::vector<std::vector<int>>& matrix) {
+        int rows = matrix.size();
+        int cols = matrix[0].size();
+
+        std::vector<int> result;
+        result.reserve(rows * cols);
+
+        for (int diag = 0; diag < rows + cols - 1; ++diag) {
+            // Figure out where the diagonal starts
+            int startRow = (diag < cols) ? 0 : diag - cols + 1;
+            int startCol = (diag < cols) ? diag : cols - 1;
+
+            std::vector<int> diagonal;
+            int i = startRow, j = startCol;
+            while (i < rows && j >= 0) {
+                diagonal.push_back(matrix[i][j]);
+                i++;
+                j--;
+            }
+
+            //reverse it (zig-zag pattern)
+            if (diag % 2 == 0) {
+                std::reverse(diagonal.begin(), diagonal.end());
+            }
+            for (int val : diagonal) {
+                result.push_back(val);
+            }
+        }
+
+        return result;
+    }
+};
+
+SOLUTION:
+The problem basically says to output and traverse the array in a zig zag/s pattern. 
+With any MxN array we have a set amount of diagnal combinations so if you do M+N-1 orrows + columns -1 like the code says we have the amount of times 
+we need to traverse through the array for the correct output.
+Now that we have that we need to know where to start where we traverse so depending on the amount of columns and diagonals.
+So now when we traverse we can go up or down using i and j. The only thing left is to find out
+when to traverse  in an up or downwards path. Noting that each time out diagonal counter is even we have to traverse in an upwards order.
