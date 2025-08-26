@@ -1,0 +1,42 @@
+DESCRIPTION:
+easy-
+You are given a 2D 0-indexed integer array dimensions.
+
+For all indices i, 0 <= i < dimensions.length, dimensions[i][0] represents the length and dimensions[i][1] represents the width of the rectangle i.
+
+Return the area of the rectangle having the longest diagonal. If there are multiple rectangles with the longest diagonal, return the area of the rectangle having the maximum area.
+
+ 
+
+Example 1:
+
+Input: dimensions = [[9,3],[8,6]]
+Output: 48
+Explanation: 
+For index = 0, length = 9 and width = 3. Diagonal length = sqrt(9 * 9 + 3 * 3) = sqrt(90) ≈ 9.487.
+For index = 1, length = 8 and width = 6. Diagonal length = sqrt(8 * 8 + 6 * 6) = sqrt(100) = 10.
+So, the rectangle at index 1 has a greater diagonal length therefore we return area = 8 * 6 = 48.
+
+CODE:
+class Solution {
+public:
+    int areaOfMaxDiagonal(vector<vector<int>>& dimensions) {
+        double maxsqrt=0.0;
+        double sqroot=0.0;
+        int maxA=0;
+
+        for(int i = 0;i<dimensions.size();i++){
+            sqroot = sqrt(( dimensions[i][0]*dimensions[i][0] ) + (dimensions[i][1]*dimensions[i][1]));
+            if (sqroot > maxsqrt || (sqroot == maxsqrt && dimensions[i][0] * dimensions[i][1] > maxA)) {
+                maxsqrt = sqroot;
+                maxA = dimensions[i][0] * dimensions[i][1];
+            }
+
+        }
+        return maxA;
+    }
+};
+SOLUTION:
+In the example we're given a clue to how to solve through calculating the diagonal. By doing iterating through and calculating the diagonal then updating it through a counter
+we get really close to the solution. The problem is the edge cases where we cannot rely on the diagonal alone. To fix this we handle the first case where there are two maxAreas possible.
+On top of this we need to ensure that even if the dimensions are equal the product is still above the curent max area.
