@@ -1,0 +1,118 @@
+DESCRIPTION:
+You are given a 2D integer matrix grid of size n x m, where each element is either 0, 1, or 2.
+
+A V-shaped diagonal segment is defined as:
+
+    The segment starts with 1.
+    The subsequent elements follow this infinite sequence: 2, 0, 2, 0, ....
+    The segment:
+        Starts along a diagonal direction (top-left to bottom-right, bottom-right to top-left, top-right to bottom-left, or bottom-left to top-right).
+        Continues the sequence in the same diagonal direction.
+        Makes at most one clockwise 90-degree turn to another diagonal direction while maintaining the sequence.
+
+Return the length of the longest V-shaped diagonal segment. If no valid segment exists, return 0.
+class Solution {
+public:
+    int lenOfVDiagonal(vector<vector<int>>& grid) {
+        const int n = grid.size();
+        const int m = grid[0].size();
+        int result = 0;
+
+        // Rolling arrays: only 2 rows per direction instead of n rows
+        vector<int> prev_down_right(m, 1), prev_down_left(m, 1);
+        vector<int> curr_down_right(m, 1), curr_down_left(m, 1);
+
+        // Pass 1: fill down_right and down_left
+        vector<vector<int>> down_right(n, vector<int>(m, 1));
+        vector<vector<int>> down_left(n, vector<int>(m, 1));
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                const int x = grid[i][j];
+                if (x == 1) {
+                    result = max(result, 1);
+                    curr_down_right[j] = curr_down_left[j] = 1;
+                    continue;
+                }
+                curr_down_right[j] = curr_down_left[j] = 1;
+                if (i > 0 && j > 0 && grid[i-1][j-1] == 2 - x) {
+                    curr_down_right[j] = prev_down_right[j-1] + 1;
+                }
+                if (i > 0 && j+1 < m && grid[i-1][j+1] == 2 - x) {
+                    curr_down_left[j] = prev_down_left[j+1] + 1;
+                }
+                down_right[i][j] = curr_down_right[j];
+                down_left[i][j]  = curr_down_left[j];
+            }
+            swap(prev_down_right, curr_down_right);
+            swap(prev_down_left, curr_down_left);
+        }
+
+        // Pass 2: fill up_right and up_left
+        vector<int> prev_up_right(m, 1), prev_up_left(m, 1);
+        vector<int> curr_up_right(m, 1), curr_up_left(m, 1);
+        vector<vector<int>> up_right(n, vector<int>(m, 1));
+        vector<vector<int>> up_left(n, vector<int>(m, 1));
+        for (int i = n-1; i >= 0; i--) {
+            for (int j = 0; j < m; j++) {
+                const int x = grid[i][j];
+                if (x == 1) {
+                    curr_up_right[j] = curr_up_left[j] = 1;
+                    continue;
+                }
+                curr_up_right[j] = curr_up_left[j] = 1;
+                if (i+1 < n && j > 0 && grid[i+1][j-1] == 2 - x) {
+                    curr_up_right[j] = prev_up_right[j-1] + 1;
+                }
+                if (i+1 < n && j+1 < m && grid[i+1][j+1] == 2 - x) {
+                    curr_up_left[j] = prev_up_left[j+1] + 1;
+                }
+                up_right[i][j] = curr_up_right[j];
+                up_left[i][j]  = curr_up_left[j];
+            }
+            swap(prev_up_right, curr_up_right);
+            swap(prev_up_left, curr_up_left);
+        }
+
+        auto valid = [](int x, int len) {
+            return (len % 2 == 0 && x == 0) || (len % 2 == 1 && x == 2);
+        };
+
+        // Combine results (same as before)
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                const int x = grid[i][j];
+                if (x == 1) continue;
+
+                if (valid(x, down_right[i][j])) {
+                    int ni = i - down_right[i][j];
+                    int nj = j - down_right[i][j];
+                    if (ni >= 0 && nj >= 0 && grid[ni][nj] == 1) {
+                        result = max(result, down_right[i][j] + up_right[i][j]);
+                    }
+                }
+                if (valid(x, down_left[i][j])) {
+                    int ni = i - down_left[i][j];
+                    int nj = j + down_left[i][j];
+                    if (ni >= 0 && nj < m && grid[ni][nj] == 1) {
+                        result = max(result, down_left[i][j] + down_right[i][j]);
+                    }
+                }
+                if (valid(x, up_left[i][j])) {
+                    int ni = i + up_left[i][j];
+                    int nj = j + up_left[i][j];
+                    if (ni < n && nj < m && grid[ni][nj] == 1) {
+                        result = max(result, up_left[i][j] + down_left[i][j]);
+                    }
+                }
+                if (valid(x, up_right[i][j])) {
+                    int ni = i + up_right[i][j];
+                    int nj = j - up_right[i][j];
+                    if (ni < n && nj >= 0 && grid[ni][nj] == 1) {
+                        result = max(result, up_right[i][j] + up_left[i][j]);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+};
