@@ -1,0 +1,63 @@
+You are given an n x n square matrix of integers grid. Return the matrix such that:
+
+    The diagonals in the bottom-left triangle (including the middle diagonal) are sorted in non-increasing (decreasing)order.
+    The diagonals in the top-right triangle are sorted in non-decreasing(increasing) order.
+
+ 
+
+Example 1:
+
+Input: grid = [[1,7,3],[9,8,2],[4,5,6]]
+
+Output: [[8,2,3],[9,6,7],[4,5,1]]
+
+SOLUTION CODE:
+class Solution {
+public:
+    vector<vector<int>> sortMatrix(vector<vector<int>>& grid) {
+        int n = grid.size();
+
+        // process each diagonal(helper function)
+        auto sortDiagonal = [&](int row, int col, bool descending) {
+            vector<int> diagonal;
+
+            // iterate through each diagonal
+            for (int r = row, c = col; r < n && c < n; r++, c++)
+                diagonal.push_back(grid[r][c]);
+
+            // sort diagonal and put back into grid
+            if (descending)
+                sort(diagonal.rbegin(), diagonal.rend());
+            else
+                sort(diagonal.begin(), diagonal.end());
+
+            //this is where you put it back
+            int idx = 0;
+            for (int r = row, c = col; r < n && c < n; r++, c++)
+                grid[r][c] = diagonal[idx++];
+        };
+
+        // Diagonals starting from the first column (sort descending)
+        for (int i = 0; i < n; i++)
+            sortDiagonal(i, 0, true);
+
+        // Diagonals starting from the first row (sort ascending)
+        for (int j = 1; j < n; j++)
+            sortDiagonal(0, j, false);
+
+        return grid;
+    }
+};
+
+SOLUTION:
+HOW TO ITERATE DIAGONALLY:
+Here you just use the fact that a diagonal changes rows and columns each time so to access those elements you just use a for loop using grid[r][c] and incremenent both
+WHILE ensuring BOTH r and c are < than and in the grid. 
+HOW TO SORT each diagonal:
+So we create a vector first and push each diagonal into it. Then the question basicallly says everytying below the middle(including the middle) are sorted in decreasing order.
+We do this through the sort function and take advantage of the rbegin and begin to print things out in either decreasing or increasing order. 
+HOW TO ADDRESS WHICH DIAGONAL IS SORTED WHICH WAY:
+So now we know how to sort each diagonal ascending or descending but what about choosing which diagonal. We know it depends on if its upper middle or lower middle inclusive.
+Using this, and keeping in mind row=i and col=j, we know that the main diagonal will always be at col and row = 0. By setting j to 0 or column to 0 we get the main diagonal so we 
+automatically know that EVERYTHING below this will be descending. Now we just access the remaining rows to get the diagonals. NOTE THAT BY CALLING sortDiagonal WE take care of getting
+the diagonal elements so we just need to acess one element to start sorting and returning the correct diagonals for each diagonal.
