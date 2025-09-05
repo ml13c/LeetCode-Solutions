@@ -1,0 +1,29 @@
+DESCRIPTION:
+You are given two integers num1 and num2.
+
+In one operation, you can choose integer i in the range [0, 60] and subtract 2i + num2 from num1.
+
+Return the integer denoting the minimum number of operations needed to make num1 equal to 0.
+
+If it is impossible to make num1 equal to 0, return -1.
+CODE SOLUTION:
+class Solution {
+public:
+    int makeTheIntegerZero(int num1, int num2) {
+        for (int k = 1; k <= 60; k++) {
+            long long remain = (long long)num1 - (long long)k * num2;//need long over int due to error on int capacity
+            if (remain < 0) break;
+
+            int ones = __builtin_popcountll(remain);
+            // condition: enough operations to cover each 1 bit,
+            // but not more than remain itself
+            if (ones <= k && k <= remain) {
+                return k;
+            }
+        }
+        return -1;
+    }
+};
+
+EXPLANATION:
+i dont understand it. Theres a trick with checking the bits but its not really simple
