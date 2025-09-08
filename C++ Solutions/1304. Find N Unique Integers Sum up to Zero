@@ -1,0 +1,25 @@
+DESCRIPTION:
+Given an integer n, return any array containing n unique integers such that they add up to 0.
+CODE SOLUTION:
+class Solution {
+public:
+    vector<int> sumZero(int n) {
+        vector<int> ans;
+        
+        // if odd we can just throw a 0
+        if (!(n % 2 == 0)) {
+            ans.push_back(0);
+        }
+        
+        // add pairs to cancel out until n number reached
+        for (int i = 1; i <= n / 2; i++) {
+            ans.push_back(i);
+            ans.push_back(-i);
+        }
+        return ans;
+    }
+};
+
+SOLUTION EXPLANATION:
+We need to add up to zero. So if there is an array of size 1 we can just add zero. That takes care of the first case, then we need to handle everyother possible case. To do this
+we can iterate through the size of the array with n and just have pairs of numbers being positive and negative to cancel each other out. Odd n is handled through the odd check.
