@@ -1,0 +1,33 @@
+DESCRIPTION:
+You are given a 2D array queries, where queries[i] is of the form [l, r]. Each queries[i] defines an array of integers nums consisting of elements ranging from l to r, both inclusive.
+
+In one operation, you can:
+
+    Select two integers a and b from the array.
+    Replace them with floor(a / 4) and floor(b / 4).
+
+Your task is to determine the minimum number of operations required to reduce all elements of the array to zero for each query. Return the sum of the results for all queries.
+CODE SOLUTION:
+// Time:  O(qlogr)
+// Space: O(1)
+
+// greedy
+class Solution {
+public:
+    long long minOperations(vector<vector<int>>& queries) {
+        int64_t result = 0;
+        for (const auto &q : queries) {
+            const int64_t l = q[0], r = q[1];
+            int64_t total = 0;
+            for (int64_t base = 1, i = 1; base <= r; base *= 4, ++i) { 
+                const int nl = max(l, base), nr = min(r, base * 4 - 1);
+                if (nl <= nr) {
+                    total += i * (nr - nl + 1);
+                }
+            }
+            result += (total + 1) / 2;
+        }
+        return result;
+    }
+};
+SOLUTION EXPLANATION:
